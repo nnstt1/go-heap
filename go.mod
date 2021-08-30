@@ -3,8 +3,9 @@ module github.com/nnstt1/go-heap
 go 1.16
 
 require (
+	github.com/google/uuid v1.1.2
 	k8s.io/client-go v0.22.1
-	k8s.io/kubernetes v1.22.0
+	k8s.io/kubernetes v1.22.1
 )
 
 replace k8s.io/api => k8s.io/api v0.22.0

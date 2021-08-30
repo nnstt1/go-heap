@@ -13,3 +13,17 @@ https://github.com/kubernetes/kubernetes/issues/79384 を参照に `go-mod-kube.
 go mod tidy
 go build
 ```
+
+## 関数
+
+- Add(obj) error
+- AddIfNotPresent(obj) error
+- Update(obj) error
+    Add() を呼び出し
+- Delete(obj) error
+- Peak() interface{}
+- Pop() (interface{}, error)
+- Get(obj) (interface{}, bool, error)
+- List() []interface{}
+- Len() int
+- New(KeyFunc, lessFunc) *Heap

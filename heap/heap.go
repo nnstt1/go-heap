@@ -66,20 +66,37 @@ func (h *data) Swap(i, j int) {
 
 // heap.Interface の実装
 func (h *data) Push(kv interface{}) {
-	keyValue := kv.(*itemKeyValue)
+	// 型アサーション
+	// Push(kv interface{}) に渡される引数は itemKeyValue 型なのでアサーション可能
+	keyValue, ok := kv.(*itemKeyValue)
+	fmt.Printf("Type assertion: %v\n", ok)
+
 	n := len(h.queue)
+	fmt.Printf("h.queue length: %d\n", n)
+
+	// map[string]*heapItem に対して KeyValue を設定する
+	// Value は obj と キュー長を表す index を持つ heapItem
 	h.items[keyValue.key] = &heapItem{keyValue.obj, n}
+	fmt.Printf("KeyValue.key: %s\n", keyValue.key)
+
 	h.queue = append(h.queue, keyValue.key)
 }
 
 // heap.Interface の実装
+// data.queue の最後に格納された Key に該当する Value を返却
 func (h *data) Pop() interface{} {
 	key := h.queue[len(h.queue)-1]
+
+	// スライスの最後を除いて設定し直し
 	h.queue = h.queue[0 : len(h.queue)-1]
+
+	// map[string]*heapItem から Value を取得
 	item, ok := h.items[key]
 	if !ok {
 		return nil
 	}
+
+	// builtin.delete(m map[Type]Type1, key Type) で map から指定の KeyValue を削除
 	delete(h.items, key)
 	return item.obj
 }
@@ -106,6 +123,9 @@ func (h *Heap) Add(obj interface{}) error {
 		h.data.items[key].obj = obj
 		heap.Fix(h.data, h.data.items[key].index)
 	} else {
+		// container/heap.Push(h Interface, x interface{}) が呼ばれて
+		// container/heap.Push(x interface{}) を実装している
+		// h.Push(kv interface{}) に繋がっている
 		heap.Push(h.data, &itemKeyValue{key, obj})
 	}
 
@@ -139,6 +159,7 @@ func (h *Heap) Delete(obj interface{}) error {
 	return fmt.Errorf("object not found")
 }
 
+// data.Peak() を実行
 func (h *Heap) Peek() interface{} {
 	return h.data.Peek()
 }
